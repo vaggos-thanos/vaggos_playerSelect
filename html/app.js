@@ -8,6 +8,7 @@ window.addEventListener("message", function(event) {
 
         case 'exit':
             $('#mainMenu').fadeOut(500)
+            $(`#playerImges`).empty();
             this.document.body.style.backgroundColor = "#00000000"
         break;
     }
@@ -22,9 +23,7 @@ $(document).keyup(async (e) => {
 });
 
 async function loadPlayers(players) {
-    console.log(players.length)
     for ( const player of players) {
-        console.log(player.name);
         $(`#playerImges`).append(`<button><img id="${player.id}" src="${player.avatarURL}" /></button>`);
         $(`#${player.id}`).click(function() {
             $.post('https://vaggos_playerSelect/selectedPlayer', JSON.stringify({

@@ -3,16 +3,10 @@ local selectedPlayer = -1
 if(Config.dev) then
     RegisterCommand('TestUi', function() 
         local nearbyPeds = lib.getNearbyPlayers(GetEntityCoords(PlayerPedId()), 2, false)
-
-        print(nearbyPeds)
-        print(ESX.DumpTable(nearbyPeds))
-       
-
-        local pData = {1}
         local playres = {}
 
         for k, data in pairs(nearbyPeds) do
-            local MugShot = exports["MugShotBase64"]:GetMugShotBase64(GetPlayerPed(GetPlayerFromServerId(data["id"])), true)
+            local MugShot = exports["MugShotBase64"]:GetMugShotBase64(data["ped"], true)
             table.insert(playres, {
                 ["id"] = data["id"],
                 ["name"] = GetPlayerName(data["id"]),
@@ -44,19 +38,13 @@ RegisterNUICallback("selectedPlayer", function(data)
     })
 
     selectedPlayer = data["id"]
-    print(selectedPlayer)
 end)
 
-RegisterNetEvent("vaggos_playerSelect:selectPlayers", function()
-    local nearbyPeds = lib.getNearbyPlayers(GetEntityCoords(PlayerPedId()), 2, false)
-
-    print(nearbyPeds)
-    print(ESX.DumpTable(nearbyPeds))
-   
+RegisterNetEvent("vaggos_playerSelect:selectPlayers", function(nearbyPeds)
     local playres = {}
 
     for k, data in pairs(nearbyPeds) do
-        local MugShot = exports["MugShotBase64"]:GetMugShotBase64(GetPlayerPed(GetPlayerFromServerId(data["id"])), true)
+        local MugShot = exports["MugShotBase64"]:GetMugShotBase64(data["ped"], true)
         table.insert(playres, {
             ["id"] = data["id"],
             ["name"] = GetPlayerName(data["id"]),
@@ -79,6 +67,7 @@ AddEventHandler("vaggos_playerSelect:selectedPlayers", function(cb)
             ["id"] = selectedPlayer,
             ["wait"] = false
         })
+        selectedPlayer = -1
     else
         cb({
             ["id"] = nil,
